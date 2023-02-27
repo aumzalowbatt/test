@@ -1,0 +1,225 @@
+<div class="content" role="main">
+  <!-- Resources -->
+  <h1>Submit Tax Filing</h1>
+
+  <div id="stepper1" class="bs-stepper">
+    <div class="row">
+    <div class="col-12 col-md-4"></div>
+    <div class="col-12 col-md-4">
+      <div class="bs-stepper-header">
+        <div class="step" data-target="#test-l-1">
+          <button class="step-trigger">
+            <span class="bs-stepper-circle">1</span>
+            <span class="bs-stepper-label">Input Detail</span>
+          </button>
+        </div>
+        <div class="line"></div>
+        <div class="step" data-target="#test-l-2">
+          <button class="step-trigger">
+            <span class="bs-stepper-circle">2</span>
+            <span class="bs-stepper-label">Review & Confirm</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4"></div>
+    
+  </div>
+
+    <div class="card-form">
+      <div class="bs-stepper-content">
+        <form #Form="ngForm">
+          <div id="test-l-1" class="content">
+
+            <div class="row mb-3">
+              <div class="col-12">
+                <h4>1. Tax Filing Detail</h4>
+                <hr />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12">
+                <label class="required">Type of filing</label>
+              </div>
+              <ng-container *ngFor="let f of filingTypes">
+                <div class="col-12 col-md-3">
+                  <input type="radio" name="filingType" [value]="f.key" #filingType="ngModel"
+                  [(ngModel)]="taxData.filingType" (change)="changefilingType()"/>
+                  <label class="ml-2"> {{f.value}} <i class="fa fa-question-circle" aria-hidden="true"></i></label>
+                </div>
+              </ng-container>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12">
+                <label class="required">Vat Month</label>
+              </div>
+              <div class="col-12 col-md-3">
+                <select class="form-control" name="month" #month="ngModel"
+                [(ngModel)]="taxData.month" required>
+                  <option selected value="" disabled>Select</option>
+                  <option *ngFor="let m of months" [value]="m.key">{{ m.value }}</option>
+                </select>
+    
+              </div>
+              <div class="col-12 col-md-3">
+                <select class="form-control" name="year" #year="ngModel"
+                [(ngModel)]="taxData.year" required>
+                  <option selected value="" disabled>Select</option>
+                  <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+                </select>
+    
+              </div>
+            </div>
+            <div class="row mb-6">
+              <div class="col-12">
+                <h4>2. Tax Computation</h4>
+                <hr />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12">
+                <label class="required">Provide total value taxable electronic service</label>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12 col-md-6">
+                <label>1. Total value of taxable electronic service exclusive of VAT</label>
+              </div>
+              <div class="col-12 col-md-6" >
+                <input type="text" class="form-control" name="saleAmount" placeholder="THB" #saleAmount="ngModel"
+                [(ngModel)]="taxData.saleAmount" (change)="changesaleAmount()" style="text-align: right;" appTwoDigitDecimaNumber/>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12 col-md-6">
+                <label>2. Total VAT to be rem emitted (7% of 1.)</label>
+              </div>
+              <div class="col-12 col-md-6">
+                <input type="text" class="form-control" name="taxAmount" placeholder="THB" #taxAmount="ngModel"
+                [(ngModel)]="taxData.taxAmount" (change)="changetaxAmount()" style="text-align: right;" appTwoDigitDecimaNumber/>
+                <label style="color: red;" *ngIf="taxData.taxAmount > 20.00">Invalid Tax</label>
+              </div>
+            </div>
+            <ng-container *ngIf="taxData.filingType == 1">
+            <div class="row mb-3">
+              <div class="col-12">
+                <label>In case of late filling and payment, or additional filling</label>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12 col-md-6">
+                <label>3. Surcharge</label>
+              </div>
+              <div class="col-12 col-md-6">
+                <input type="text" class="form-control" name="surcharge" #surcharge="ngModel"
+                [(ngModel)]="taxData.surcharge" readonly style="text-align: right;"/>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12 col-md-6">
+                <label>4. Penalty</label>
+              </div>
+              <div class="col-12 col-md-6">
+                <input type="text" class="form-control" name="penalty" #penalty="ngModel"
+                [(ngModel)]="taxData.penalty" readonly style="text-align: right;"/>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12 col-md-6">
+                <label>5. Total amount of VAT, surcharge, and penalty to bo romitted (2.+3.+4.)</label>
+              </div>
+              <div class="col-12 col-md-6">
+                <input type="text" class="form-control" name="totalAmount" #totalAmount="ngModel"
+                [(ngModel)]="taxData.totalAmount" readonly style="text-align: right;"/>
+              </div>
+            </div>
+          </ng-container>
+          </div>
+          <div id="test-l-2" class="content">
+
+            <div class="row mb-3">
+              <div class="col-12">
+                <h4>Tax Filing Detail</h4>
+                <hr />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12 col-md-2">
+                <label class="ml-2"> <b>Type of filing</b> </label>
+              </div>
+              <div class="col-12 col-md-3">
+                <label class="ml-2"> {{taxData.filingType.value}} </label>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12 col-md-2">
+                <label class="ml-2"> <b>VAT Month</b> </label>
+              </div>
+              <div class="col-12 col-md-3">
+                <label class="ml-2"> {{taxData.month.value}} {{taxData.year}} </label>
+              </div>
+            </div>
+            <div class="row mb-6">
+              <div class="col-12">
+                <h4>Tax Computation</h4>
+                <hr />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12 col-md-6">
+                <label class="ml-2"> <b>Total value of taxable electronic service exclusive of VAT</b> </label>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="ml-2"> {{taxData.saleAmount}} </label>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12 col-md-6">
+                <label class="ml-2"> <b>Total VAT to ber remitted</b><br/>(7% of Total value of t of taxable electronic service exclushve of VAT)</label>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="ml-2"> {{taxData.taxAmount}} </label>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12 col-md-6">
+                <label class="ml-2"> <b>Total Amount Payable</b></label>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="ml-2"> <b>{{taxData.totalAmount}}</b> </label>
+              </div>
+            </div>
+            <div class="row mb-6">
+              <div class="col-12">
+                <h4>Declaration</h4>
+                <hr />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12">
+                <label class="ml-2">I hereby certify that information given above are true and correct and agree to be bound by such
+                  information.</label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<div style="padding-top: 20px;">
+  <button *ngIf="step == 2" (click)="back()" class="btn btn-secondary" style="margin-right: 10px;">Back</button>
+  <button *ngIf="step == 1" (click)="next()" class="btn btn-primary">Next</button>
+  <button *ngIf="step == 2" (click)="openModal()" class="btn btn-primary">Confirm and Submit</button>
+</div>
+  
+</div>
+
+<ng-template #Confirm let-modal>
+  <div class="card text-center">
+      <div class="card-body">
+        {{ taxData | json}}
+      </div>
+      <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.dismiss('close')">Close</button>
+  </div>
+</ng-template>

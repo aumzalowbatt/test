@@ -1,0 +1,20 @@
+  .content {
+    margin: 82px auto 32px;
+    padding: 0 16px;
+    max-width: 1024px;
+  }
+
+  label.required {
+    &:after {
+        content: " *";
+        color: red;
+    }
+}
+  .card-form {
+    padding: 0.5rem 0.5rem 0;
+    border-radius: 0.75rem;
+    border: 2px solid #e8e8e8;
+}
+h1{
+  text-align: center;
+}
